@@ -1,23 +1,36 @@
+using BitTodo.Domain;
+using BitTodo.Domain.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var services = builder.Services;
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddDbContext<AppDbContext>(o 
+    => o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+services.AddDefaultIdentity<AppUser>().AddEntityFrameworkStores<AppDbContext>();
+services.Configure<IdentityOptions>(o=>
+{
+    o.Password.RequiredUniqueChars = 3;
+    o.Password.RequiredLength = 6;
+    o.Password.RequireDigit = false;
+    o.Password.RequireLowercase = true;
+    o.Password.RequireUppercase = true;
+    o.Password.RequireNonAlphanumeric = false;
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
