@@ -41,5 +41,7 @@ namespace BitTodo.Domain.Repositories
             _entities.Remove(entity);
             _context.SaveChanges();
         }
+
+        public IEnumerable<T> GetWhere(Func<T, bool> predicate)=> _entities.Where(predicate);
     }
 }

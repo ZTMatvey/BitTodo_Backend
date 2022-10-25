@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace BitTodo.Domain.DTOs.Request
 {
-    public sealed class AddGroupDTO
+    public class AddTaskDTO
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
         public string Description { get; set; }
+        public string GroupId { get; set; }
     }
 }

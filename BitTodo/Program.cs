@@ -28,6 +28,7 @@ services.Configure<IdentityOptions>(o=>
 });
 services.AddScoped(typeof(IRepository<>), typeof(EFCoreRepository<>));
 services.AddCors();
+services.AddAutoMapper(typeof(Program).Assembly);
 
 var jwtSecret = builder.Configuration["Settings:JWTSecret"].ToString();
 var key = Encoding.UTF8.GetBytes(jwtSecret);
