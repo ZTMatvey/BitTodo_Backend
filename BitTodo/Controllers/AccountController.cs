@@ -60,6 +60,44 @@ namespace BitTodo.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost("SetCompletedState")]
+        public async Task<IActionResult> SetCompletedState(SetCompletedStateDTO model)
+        {
+            try
+            {
+                var userId = User.Claims.First(x => x.Type == "id").Value;
+                var task = _tasks.Get(model.TaskId);
+                if (task == null)
+                    return BadRequest("Task not found");
+                task.IsCompleted = model.State; ;
+                _tasks.Update(task);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("DeleteTask")]
+        public async Task<IActionResult> DeleteTask(DeleteTaskDTO model)
+        {
+            try
+            {
+                var userId = User.Claims.First(x => x.Type == "id").Value;
+                var task = _tasks.Get(model.TaskId);
+                if (task == null || task.UserId != userId)
+                    return BadRequest("Task not found");
+                _tasks.Delete(task);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("Groups")]
         public async Task<IActionResult> GetGroups()
         {
@@ -75,6 +113,7 @@ namespace BitTodo.Controllers
                 return BadRequest();
             }
         }
+
         [HttpGet("Tasks")]
         public async Task<IActionResult> GetTasks()
         {
